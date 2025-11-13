@@ -1,4 +1,4 @@
-from engine import Entity as Entity
+from engine.Entity import Entity
 
 class Collider:
     def __init__(self, entity: Entity):

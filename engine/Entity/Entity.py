@@ -1,9 +1,13 @@
 from engine.Entity.Transform import Transform
+import math
 
 class Entity:
-    def __init__(self, x, y):
-        self.transform = Transform(x, y)
-        self.center = self.transform.center
+    def __init__(self, x=0, y=0, rotation=0):
+        self.transform = Transform([x, y], rotation)
+        self.local_vertices = []
+
+    def get_world_vertices(self):
+        return [self.transform.apply(v) for v in self.local_vertices]
 
     def update(self, dt, game_objects=None):
         pass
@@ -11,12 +15,7 @@ class Entity:
     def render(self, screen):
         pass
 
-class Rectangle(Entity):
-    def __init__(self, x, y, width, height):
-        super().__init__(x, y)
-        self.width = width
-        self.height = height
-        self.center = [x + width / 2, y + height / 2]
+
 
 
 class Circle(Entity):

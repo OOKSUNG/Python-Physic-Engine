@@ -1,1 +1,2 @@
-from .Entity import Rectangle, Circle, Entity
+from .Entity import  Circle, Entity
+from .Rectangle import Rectangle
