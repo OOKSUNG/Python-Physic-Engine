@@ -1,4 +1,5 @@
 from .Collider import Collider
+from .AABBBox import AABBBox
 
 class AABB(Collider):
     def __init__(self, entity):
@@ -10,6 +11,26 @@ class AABB(Collider):
         """Entity 위치 기준으로 현재 center 계산"""
         px, py = self.entity.transform.position
         return [px + self.width / 2, py + self.height / 2]
+
+    """AABB 박스 계산"""
+    def aabb_box(self):
+        x = self.entity.transform.position[0]
+        y = self.entity.transform.position[1]
+
+        half_w = self.width / 2
+        half_h = self.height / 2
+        """
+        minx = x - half_w
+        miny = y - half_h
+        maxx = x + half_w
+        maxy = y + half_h
+        """
+        minx = x
+        miny = y
+        maxx = x + half_w * 2
+        maxy = y + half_h * 2
+
+        return AABBBox(minx, miny, maxx, maxy)
 
     def aabb(self, other):
         center1 = self.get_center()
@@ -27,7 +48,7 @@ class AABB(Collider):
         return True
     
     def swept_aabb(self, other, dt):
-        #print(type(self.entity.rigidbody.velocity), self.entity.rigidbody.velocity)
+        print(type(self.entity.rigidbody.velocity), self.entity.rigidbody.velocity)
         vx = self.entity.rigidbody.velocity[0]
         vy = self.entity.rigidbody.velocity[1]
 
@@ -97,95 +118,4 @@ class AABB(Collider):
             normal = [0, -1] if rvy > 0 else [0, 1]
 
         return t_entry, normal
-    """
-    def check_swept_collision(self, dt, game_objects):
-        
-        #dt: 프레임 시간
-        #game_objects: 충돌 체크 대상 리스트
-        
-        earliest_t = 1.0
-        collision_normal = None
-        collided_obj = None
-
-        for obj in game_objects:
-            if obj is self:
-                continue
-
-            t, normal = self.entity.collider.swept_aabb(obj.collider, dt)
-            if t < earliest_t:
-                earliest_t = t
-                collision_normal = normal
-                collided_obj = obj
-
-        # 예상 이동 거리 계산
-        dx = self.entity.rigidbody.velocity[0] * dt
-        dy = self.entity.rigidbody.velocity[1] * dt
-
-        # 충돌이 있으면 이동 거리 조정
-        self.entity.transform.position[0] += dx * earliest_t
-        self.entity.transform.position[1] += dy * earliest_t
-
-        # 충돌 처리
-        if collision_normal:
-            if collision_normal[0] != 0:
-                self.entity.rigidbody.velocity[0] = 0
-            if collision_normal[1] != 0:
-                self.entity.rigidbody.velocity[1] = 0
-
-            # 남은 시간 동안 속도 적용
-            remaining_dt = dt * (1 - earliest_t)
-            self.entity.transform.position[0] += self.entity.rigidbody.velocity[0] * remaining_dt
-            self.entity.transform.position[1] += self.entity.rigidbody.velocity[1] * remaining_dt
-        
-        self
-        return collided_obj, collision_normal, t
-    """
-    # AABB 클래스 안에 추가
-    def get_expanded_rect(self, other):
-        """
-        other 를 self 크기만큼 확장한 rect 반환: (left, top, width, height)
-        self: moving box
-        other: target box
-        """
-        ox = other.entity.transform.position[0]
-        oy = other.entity.transform.position[1]
-        ow = other.width
-        oh = other.height
-
-        # other 를 self의 크기만큼 확장 (left-top 기준)
-        left = ox - self.width
-        top  = oy - self.height
-        width = ow + self.width
-        height = oh + self.height
-        return (left, top, width, height)
-
-
-
-    
-    def resolve_collision(self, static):
-
-        mx, my = self.entity.transform.position
-        mw, mh = self.width, self.height
-        sx, sy = static.entity.transform.position
-        sw, sh = static.width, static.height
-
-        # 중심 좌표
-        dx = (mx + mw / 2) - (sx + sw / 2)
-        dy = (my + mh / 2) - (sy + sh / 2)
-
-        # 겹친 거리 계산
-        overlap_x = (mw / 2 + sw / 2) - abs(dx)
-        overlap_y = (mh / 2 + sh / 2) - abs(dy)
-
-        if overlap_x > 0 and overlap_y > 0:  # 충돌함
-            # 더 적게 겹친 축으로 보정
-            if overlap_x < overlap_y:
-                move_x = overlap_x if dx < 0 else -overlap_x
-                self.entity.transform.position[0] += move_x
-                self.entity.rigidbody.velocity[0] = 0
-            else:
-                move_y = overlap_y if dy < 0 else -overlap_y
-                self.entity.transform.position[1] += move_y
-                self.entity.rigidbody.velocity[1] = 0
-            return True
-        return False
+     

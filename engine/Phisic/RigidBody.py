@@ -44,6 +44,8 @@ class RigidBody:
             # 속도 반사 (반발계수 적용)
             self.velocity[1] = -self.velocity[1] * self.restitution
             # 필요하면 x축도 처리
+        
+        
 
     def swept_resolve_collision(self, other_collider, normal, t_entry, dt):
         """
@@ -53,15 +55,15 @@ class RigidBody:
         t_entry        : 충돌 발생 시간 (0~1)
         dt             : 프레임 시간
         """
-        #print(type(t_entry), t_entry)
+        print(type(t_entry), t_entry)
 
         if normal is None:
             # 충돌이 없으면 아무 작업도 하지 않음
             self.entity.transform.position[0] += self.entity.rigidbody.velocity[0] * dt
             self.entity.transform.position[1] += self.entity.rigidbody.velocity[1] * dt
-            
-            return
 
+            return
+        print("Swept Collision Detected")
         self.entity.colliding = False
 
         # 1. 충돌 발생 전 이동분 적용

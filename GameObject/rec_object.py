@@ -1,6 +1,5 @@
 from engine.Entity.Rectangle import Rectangle
 from engine.Collider.AABB import AABB
-from engine.Collider.OBB import OBB
 from engine.Phisic.RigidBody import RigidBody
 import pygame
 
@@ -36,7 +35,7 @@ class RecObject(Rectangle):
         else:
             if hasattr(self, 'drag_offset'):
                 del self.drag_offset
-
+        """
         # 충돌 체크
         for obj in game_objects:
             if obj is not self and self.collider.aabb(obj.collider):
@@ -49,7 +48,7 @@ class RecObject(Rectangle):
                 self.rigidbody.swept_resolve_collision(obj.collider, normal, t_entry, dt)
                 #self.color = (0, 255, 0)
                 break
-
+        """
         #if collided_obj:
         #    self.rigidbody.swept_resolve_collision(collided_obj, normal, t_entry, dt)
         #    #self.colliding = True
@@ -62,12 +61,24 @@ class RecObject(Rectangle):
         pygame.draw.rect(screen, self.color,
                          (self.transform.position[0], self.transform.position[1], self.width, self.height))
 
+    def check_collision(self, other, dt):
+        # NarrowPhase: 실제 AABB 충돌 체크
+        return self.collider.aabb(other.collider)
+
+    def on_collision(self, other, dt):
+        self.color = (0, 255, 0)
+        # 충돌 시 반응 처리 (RigidBody 가지고 있으면)
+        if hasattr(self, "rigidbody") & self.collider.aabb(other.collider):
+            self.rigidbody.resolve_collision(other.collider)
+
 class RecObject2(Rectangle):
     def __init__(self, x, y, width, height):
         super().__init__(x, y, width, height)
         self.collider = AABB(self)
         self.color = (255, 0, 0)
         self.rigidbody = RigidBody(self, mass=1.0)
+        self.tree_node = None
+
 
     def update(self, dt, game_objects=None):
         self.color = (255, 0, 0)
@@ -76,6 +87,7 @@ class RecObject2(Rectangle):
         self.rigidbody.apply_force(Gravity)  # 중력 적용
         self.rigidbody.update(dt)
 
+        """
         # 충돌 체크
         for obj in game_objects:
             if obj is not self and self.collider.aabb(obj.collider):
@@ -86,10 +98,23 @@ class RecObject2(Rectangle):
                 self.rigidbody.resolve_collision(obj.collider)
                 self.color = (0, 255, 0)
                 break
+                """
+        
 
     def render(self, screen):
         import pygame
         pygame.draw.rect(screen, self.color,
                          (self.transform.position[0], self.transform.position[1], self.width, self.height))
+        
+    def check_collision(self, other, dt):
+        return self.collider.aabb(other.collider)
+
+    def on_collision(self, other, dt):
+        self.color = (0, 255, 0)
+        t_entry, normal = self.collider.swept_aabb(other.collider, dt)
+        self.rigidbody.swept_resolve_collision(other.collider, normal, t_entry, dt)
+        if self.collider.aabb(other.collider):
+            self.rigidbody.resolve_collision(other.collider)
+            
         
        

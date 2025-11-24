@@ -21,7 +21,7 @@ class RotatedRecObject(Rectangle):
         # 충돌 체크
         for obj in game_objects:
             if obj is not self and self.collider.obb(obj.collider):
-                print("Collision detected between RotatedRecObjects")
+                #print("Collision detected between RotatedRecObjects")
                 self.color = (255, 255, 0)
                 break
 
@@ -44,7 +44,7 @@ class RotatedRecObject2(Rectangle):
         # 충돌 체크
         for obj in game_objects:
             if obj is not self and self.collider.obb(obj.collider):
-                print("Collision detected between RotatedRecObjects")
+                #print("Collision detected between RotatedRecObjects")
                 self.color = (255, 255, 0)
                 break
 

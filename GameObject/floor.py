@@ -16,7 +16,7 @@ class Floor(Rectangle):
 
         # RigidBody 업데이트
         self.rigidbody.update(dt)
-
+        """
         # 충돌 체크
         for obj in game_objects:
             #if obj is not self and self.collider.aabb(obj.collider):
@@ -26,8 +26,18 @@ class Floor(Rectangle):
                 #self.color = (0, 255, 0)
                 #break
                 pass
-
+        """
     def render(self, screen):
         import pygame
         pygame.draw.rect(screen, self.color,
                          (self.transform.position[0], self.transform.position[1], self.width, self.height)) 
+        
+    def check_collision(self, other):
+        # NarrowPhase: 실제 AABB 충돌 체크
+        return self.collider.aabb(other.collider)
+
+    def on_collision(self, other):
+        # 충돌 시 반응 처리 (RigidBody 가지고 있으면)
+        if hasattr(self, "rigidbody"):
+            self.rigidbody.resolve_collision(other.collider)
+
