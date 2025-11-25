@@ -45,8 +45,6 @@ class RigidBody:
             self.velocity[1] = -self.velocity[1] * self.restitution
             # 필요하면 x축도 처리
         
-        
-
     def swept_resolve_collision(self, other_collider, normal, t_entry, dt):
         """
         Swept collision 반영
@@ -55,7 +53,6 @@ class RigidBody:
         t_entry        : 충돌 발생 시간 (0~1)
         dt             : 프레임 시간
         """
-        print(type(t_entry), t_entry)
 
         if normal is None:
             # 충돌이 없으면 아무 작업도 하지 않음
@@ -76,22 +73,10 @@ class RigidBody:
         # 2. 충돌 방향 속도 제거
         if normal[0] != 0:
             self.velocity[0] = 0
-            # 위치 보정: 다른 박스와 겹치지 않도록 이동
-            """
-            if normal[0] < 0:
-                self.entity.transform.position[0] = other_collider.entity.transform.position[0] - self.entity.width
-            else:
-                self.entity.transform.position[0] = other_collider.entity.transform.position[0] + other_collider.width
-            """
+
         if normal[1] != 0:
             self.velocity[1] = 0
-            # 위치 보정
-            """"
-            if normal[1] < 0:
-                self.entity.transform.position[1] = other_collider.entity.transform.position[1] - self.entity.height
-            else:
-                self.entity.transform.position[1] = other_collider.entity.transform.position[1] + other_collider.height
-            """
+
         # 3. 남은 시간 동안 이동 (법선에 대해 속도 이미 0으로 처리)
         remaining_dt = dt * (1 - t_entry)
         self.entity.transform.position[0] += self.velocity[0] * remaining_dt

@@ -15,9 +15,6 @@ class Entity:
     def render(self, screen):
         pass
 
-
-
-
 class Circle(Entity):
     def __init__(self, x, y, radius):
         super().__init__(x, y)

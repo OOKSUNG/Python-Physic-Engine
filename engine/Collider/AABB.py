@@ -17,18 +17,10 @@ class AABB(Collider):
         x = self.entity.transform.position[0]
         y = self.entity.transform.position[1]
 
-        half_w = self.width / 2
-        half_h = self.height / 2
-        """
-        minx = x - half_w
-        miny = y - half_h
-        maxx = x + half_w
-        maxy = y + half_h
-        """
         minx = x
         miny = y
-        maxx = x + half_w * 2
-        maxy = y + half_h * 2
+        maxx = x + self.width
+        maxy = y + self.height
 
         return AABBBox(minx, miny, maxx, maxy)
 
@@ -48,18 +40,15 @@ class AABB(Collider):
         return True
     
     def swept_aabb(self, other, dt):
-        print(type(self.entity.rigidbody.velocity), self.entity.rigidbody.velocity)
         vx = self.entity.rigidbody.velocity[0]
         vy = self.entity.rigidbody.velocity[1]
 
-        ovx = other.entity.rigidbody.velocity[0] #if hasattr(other.entity, "rigidbody") else 0
-        ovy = other.entity.rigidbody.velocity[1] #if hasattr(other.entity, "rigidbody") else 0
+        ovx = other.entity.rigidbody.velocity[0] #
+        ovy = other.entity.rigidbody.velocity[1] 
 
         # 상대 속도
         rvx = vx - ovx
-        rvy = vy - ovy
-        #print(type(vx), vx, type(vy), vy, type(ovx), ovx, type(ovy), ovy)
-        
+        rvy = vy - ovy        
 
         # 현재 박스 bounds
         x = self.entity.transform.position[0]
@@ -77,8 +66,6 @@ class AABB(Collider):
         ex_top    = oy - h
         ex_right  = ox + ow
         ex_bottom = oy + oh
-
-        #ex_left, ex_top, ex_right, ex_bottom = get_expanded_rect(self, other)
 
         # t_entry / t_exit 계산
         if rvx > 0:

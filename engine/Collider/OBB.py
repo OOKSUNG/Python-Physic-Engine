@@ -1,6 +1,5 @@
 from .Collider import Collider
 from engine.Vector import dot, normalize
-import math
 
 class OBB(Collider):
     def __init__(self, entity):

@@ -1,5 +1,3 @@
-import math
-
 
 class TreeNode:
     def __init__(self, aabb, obj=None):
@@ -17,15 +15,11 @@ class AABBTree:
     def __init__(self):
         self.root = None
 
-    # -------------------------------------------------------
-    # 🍎 AABB와 다른 AABB의 합집합 생성
-    # -------------------------------------------------------
+    # AABB와 다른 AABB의 합집합 생성
     def merge_aabb(self, aabb1, aabb2):
         return aabb1.merge(aabb2)
 
-    # -------------------------------------------------------
-    # 🍎 삽입
-    # -------------------------------------------------------
+    # 삽입
     def insert(self, obj, aabb):
         new_node = TreeNode(aabb, obj)
 
@@ -63,9 +57,7 @@ class AABBTree:
 
         return new_node
 
-    # -------------------------------------------------------
-    # 🍎 AABB 갱신 (물체 이동 시 호출)
-    # -------------------------------------------------------
+    # AABB 갱신 (물체 이동 시 호출)
     def update(self, node, new_aabb):
         if node is None:
             return
@@ -75,15 +67,13 @@ class AABBTree:
             node.aabb.miny == new_aabb.miny and
             node.aabb.maxx == new_aabb.maxx and
             node.aabb.maxy == new_aabb.maxy):
-            return
+            return node
 
         # 트리에서 제거 후 다시 삽입
         self.remove(node)
         return self.insert(node.obj, new_aabb)
 
-    # -------------------------------------------------------
-    # 🍎 제거
-    # -------------------------------------------------------
+    # 제거
     def remove(self, node):
         if node == self.root:
             self.root = None
@@ -104,9 +94,7 @@ class AABBTree:
             sibling.parent = grand
             self.update_aabb_upwards(grand)
 
-    # -------------------------------------------------------
     #  충돌 후보 반환 (Query)
-    # -------------------------------------------------------
     def query(self, aabb):
         """주어진 AABBBox와 충돌 가능성이 있는 leaf들의 obj 리스트 반환"""
         result = []
@@ -128,9 +116,7 @@ class AABBTree:
 
         return result
 
-    # -------------------------------------------------------
     # 삽입할 Leaf 결정 (Surface Area Heuristic)
-    # -------------------------------------------------------
     def choose_best_leaf(self, node, aabb):
         if node.is_leaf():
             return node
@@ -148,11 +134,39 @@ class AABBTree:
         else:
             return self.choose_best_leaf(right, aabb)
 
-    # -------------------------------------------------------
     # AABB 부모 방향으로 갱신
-    # -------------------------------------------------------
     def update_aabb_upwards(self, node):
         while node is not None:
             if not node.is_leaf():
                 node.aabb = node.left.aabb.merge(node.right.aabb)
             node = node.parent
+
+
+    # 디버그용: 트리 출력
+    def draw_tree(self, screen):
+        #if self.root is None:
+        #    return
+        self._draw_node(screen, self.root)
+
+    def _draw_node(self, screen, node):
+        if node is None:
+            return
+
+        import pygame
+
+        # AABB 정보
+        x = node.aabb.minx
+        y = node.aabb.miny
+        w = node.aabb.maxx - node.aabb.minx
+        h = node.aabb.maxy - node.aabb.miny
+
+        # 리프 = 초록색 / 내부노드 = 빨간색
+        color = (0, 255, 0) if node.is_leaf() else (0, 255, 255)
+
+        # 얇은 선으로 박스 그리기
+        pygame.draw.rect(screen, color, pygame.Rect(x, y, w, h), 1)
+
+        # 자식 노드 재귀 호출
+        if not node.is_leaf():
+            self._draw_node(screen, node.left)
+            self._draw_node(screen, node.right)
