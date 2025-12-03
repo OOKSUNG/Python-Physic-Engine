@@ -27,6 +27,9 @@ rec3 = RecObject(300, 100, 50, 50)
 rec4 = RecObject(100, 200, 50, 50)
 rec5 = RecObject(200, 200, 50, 50)
 rec6 = RecObject(300, 200, 50, 50)
+rec7 = RecObject(100, 300, 50, 75)
+rec8 = RecObject(200, 300, 75, 50)
+rec9 = RecObject(300, 300, 75, 75)
 
 # obb 오브젝트
 rotated_rec = RotatedRecObject(500, 200, 100, 50, 75)
@@ -36,9 +39,9 @@ rotated_rec2 = RotatedRecObject2(500, 400, 100, 50, 225)
 swept_rec = SweptRecObject(600, 100, 150, 150)
 
 # 바닥 오브젝트
-floor = Floor(25, 525, 750, 50)
+floor = Floor(550, 525, 250, 50)
 
-game_objects = [rec1, rec2, rec3, rec4, rec5, rec6, floor]
+game_objects = [rec1, rec2, rec3, rec4, rec5, rec6, rec7, rec8, rec9]
 swept_objects = [swept_rec, floor]
 rotated_game_objects = [rotated_rec, rotated_rec2]
 
@@ -54,7 +57,6 @@ for obj in game_objects:
 running = True
 while running:
     dt = clock.tick(60) / 1000.0  # deltaTime (초 단위)
-    
     # ---- 이벤트 처리 ----
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -85,7 +87,7 @@ while running:
         obj.update(dt, swept_objects)
 
     # ---- 렌더링 ----
-    screen.fill((40, 40, 40))
+    screen.fill((250, 250, 250))
     for obj in game_objects:
         obj.render(screen)
     

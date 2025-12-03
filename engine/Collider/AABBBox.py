@@ -8,6 +8,7 @@ class AABBBox:
     def area(self):
         return (self.maxx - self.minx) * (self.maxy - self.miny)
 
+    # 내부 노드 aabb 계산
     def merge(self, other):
         return AABBBox(
             min(self.minx, other.minx),

@@ -1,6 +1,9 @@
 from .Collider import Collider
 from .AABBBox import AABBBox
 
+
+Ellipsis = 1e-3
+
 class AABB(Collider):
     def __init__(self, entity):
         super().__init__(entity)
@@ -43,7 +46,7 @@ class AABB(Collider):
         vx = self.entity.rigidbody.velocity[0]
         vy = self.entity.rigidbody.velocity[1]
 
-        ovx = other.entity.rigidbody.velocity[0] #
+        ovx = other.entity.rigidbody.velocity[0] 
         ovy = other.entity.rigidbody.velocity[1] 
 
         # 상대 속도
@@ -95,7 +98,7 @@ class AABB(Collider):
         # 충돌 조건 체크
         if t_entry > t_exit:
             return 1.0, None  # 충돌 없음
-        if t_entry < 0 or t_entry > 1:
+        if t_entry < 0 or t_entry > dt:
             return 1.0, None  # 프레임 범위를 벗어남 → 충돌 없음
 
         # 충돌 방향 계산

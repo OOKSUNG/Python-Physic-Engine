@@ -1,5 +1,4 @@
 from engine.Entity.Transform import Transform
-import math
 
 class Entity:
     def __init__(self, x=0, y=0, rotation=0):

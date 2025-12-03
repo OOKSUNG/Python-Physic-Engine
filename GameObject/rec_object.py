@@ -10,7 +10,6 @@ class RecObject(Rectangle):
         super().__init__(x, y, width, height)
         self.collider = AABB(self)
         self.color = (255, 165, 0)
-        #
         self.rigidbody = RigidBody(self, mass=1.0)
         self.colliding = False
 
@@ -28,10 +27,6 @@ class RecObject(Rectangle):
         import pygame
         pygame.draw.rect(screen, self.color,
                          (self.transform.position[0], self.transform.position[1], self.width, self.height))
-
-    def check_collision(self, other, dt):
-        # NarrowPhase: 실제 AABB 충돌 체크
-        return self.collider.aabb(other.collider)
 
     def on_collision(self, other, dt):
         try:

@@ -10,11 +10,6 @@ def mul_scalar(v, s):
     return [v[0] * s, v[1] * s]
 
 def rotate(v, angle, origin=[0, 0]):
-    """
-    v : [x, y]
-    angle : rad
-    origin : 회전 중심
-    """
     x, y = v[0] - origin[0], v[1] - origin[1]
     cos_r = math.cos(angle)
     sin_r = math.sin(angle)

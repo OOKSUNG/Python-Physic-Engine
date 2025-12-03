@@ -1,5 +1,4 @@
 from engine.Entity.Entity import Entity
-import math
 
 class Rectangle(Entity):
     def __init__(self, x, y, width, height, rotation = 0):
@@ -9,7 +8,6 @@ class Rectangle(Entity):
         self.center = [x + width / 2, y + height / 2]
         self.local_vertices = self.get_local_vertices()
         
-
     def get_local_vertices(self):
         half_w = self.width / 2
         half_h = self.height / 2

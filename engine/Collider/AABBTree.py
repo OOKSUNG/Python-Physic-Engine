@@ -3,7 +3,7 @@ class TreeNode:
     def __init__(self, aabb, obj=None):
         self.aabb = aabb     # AABBBox
         self.obj = obj       # 실제 GameObject
-        self.parent = None
+        self.parent = None   # 부모노드 ## 
         self.left = None
         self.right = None
 
@@ -28,11 +28,12 @@ class AABBTree:
             self.root = new_node
             return new_node
 
-        # 1. 삽입할 위치 찾기 (Leaf까지 내려감)
+        # 삽입할 위치 찾기 (Leaf까지 내려감)
         leaf = self.choose_best_leaf(self.root, new_node.aabb)
 
-        # 2. 새로운 부모 노드 생성
+        # 새로운 부모 노드 생성
         old_parent = leaf.parent
+        # 새로운 내부 노드의 면적을 계산하여 aabb 반환
         new_parent_aabb = self.merge_aabb(leaf.aabb, new_node.aabb)
         new_parent = TreeNode(new_parent_aabb)
 
@@ -47,9 +48,9 @@ class AABBTree:
             self.root = new_parent
         else:
             # 기존 부모가 leaf를 자식으로 갖고 있었으니 교체
-            if old_parent.left is leaf:
+            if old_parent.left is leaf: # 리프 노드가 기존 부모의 왼쪽 자식이면
                 old_parent.left = new_parent
-            else:
+            else:                       # 리프 노드가 기존 부모의 오른쪽 자식이면
                 old_parent.right = new_parent
 
             # 부모의 AABB는 틀어졌으므로 위로 올라가며 업데이트
@@ -124,7 +125,6 @@ class AABBTree:
         # 자식을 합쳤을 때 면적 증가량 계산
         left = node.left
         right = node.right
-
         area_left = left.aabb.merge(aabb).area()
         area_right = right.aabb.merge(aabb).area()
 
@@ -141,11 +141,8 @@ class AABBTree:
                 node.aabb = node.left.aabb.merge(node.right.aabb)
             node = node.parent
 
-
     # 디버그용: 트리 출력
     def draw_tree(self, screen):
-        #if self.root is None:
-        #    return
         self._draw_node(screen, self.root)
 
     def _draw_node(self, screen, node):
@@ -160,8 +157,8 @@ class AABBTree:
         w = node.aabb.maxx - node.aabb.minx
         h = node.aabb.maxy - node.aabb.miny
 
-        # 리프 = 초록색 / 내부노드 = 빨간색
-        color = (0, 255, 0) if node.is_leaf() else (0, 255, 255)
+        # 리프 = 청록색 / 내부노드 = 빨간색
+        color = (0, 0, 0) if node.is_leaf() else (255, 0, 0)
 
         # 얇은 선으로 박스 그리기
         pygame.draw.rect(screen, color, pygame.Rect(x, y, w, h), 1)
